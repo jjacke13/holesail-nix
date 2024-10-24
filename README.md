@@ -9,4 +9,4 @@ In NixOS or non-NixOS linux (but with Nix installed), run:
 
 If you have flakes enabled in your system, run:
 
-nix build 
+- nix build github:jjacke13/Holesail-nix-aarch64#packages.holesail
