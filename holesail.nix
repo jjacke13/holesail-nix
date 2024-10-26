@@ -16,7 +16,6 @@ pkgs.buildNpmPackage rec {
   # The prepack script runs the build script, which we'd rather do in the build phase.
   npmPackFlags = [ "--ignore-scripts" ];
 
-  #NODE_OPTIONS = "--openssl-legacy-provider";
   buildPhase = "echo 'No build phase required'";
   meta = {
     description = "Holesail!";
