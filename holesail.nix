@@ -1,4 +1,4 @@
-{ pkgs ? import <nixpkgs> {} }:
+{ pkgs ? import (fetchTarball "https://github.com/NixOS/nixpkgs/archive/refs/tags/24.05.tar.gz") {} }:
 
 pkgs.buildNpmPackage rec {
   pname = "holesail";
@@ -13,7 +13,6 @@ pkgs.buildNpmPackage rec {
 
   npmDepsHash = "sha256-lZEpP14sN62LOv85VsGEIWAHXQuRt6lfhbp/iGpffX4=";
 
-  # The prepack script runs the build script, which we'd rather do in the build phase.
   npmPackFlags = [ "--ignore-scripts" ];
 
   buildPhase = "echo 'No build phase required'";
@@ -21,6 +20,5 @@ pkgs.buildNpmPackage rec {
     description = "Holesail!";
     homepage = "holesail.io";
     license = pkgs.lib.licenses.gpl3Only;
-    maintainers = with pkgs.lib.maintainers; [ pkgs.lib.maintainers.jacke ];
   };
 }
