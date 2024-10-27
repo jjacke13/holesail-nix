@@ -9,4 +9,4 @@ In NixOS or non-NixOS linux (but with Nix installed), run:
 
 For documentation on how to use Holesail, go to: https://github.com/holesail/holesail .
 
-Notice: the MIT licanse here, refers to the code of this repository. License of the actual Holesail package is GPL3.0
+Notice: the MIT license here, refers to the code of this repository. License of the actual Holesail package is GPL3.0
