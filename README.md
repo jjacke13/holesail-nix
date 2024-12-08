@@ -9,7 +9,7 @@ In NixOS or non-NixOS linux (but with Nix installed), run:
 
 If you have flakes enabled:
 
-- nix build 
+- nix build github:jjacke13/holesail-nix#holesail
 
 For documentation on how to use Holesail, go to: https://github.com/holesail/holesail .
 
