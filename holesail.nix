@@ -17,7 +17,10 @@ pkgs.buildNpmPackage rec {
 
   buildPhase = "echo 'No build phase required'";
   meta = {
-    description = "Holesail!";
+    description = "Peer to Peer tunnels for Instant Access
+                        Create P2P tunnels instantly that bypass any network, firewall, NAT restrictions
+                        and expose your local network to the internet securely,
+                        no Dynamic DNS required.";
     homepage = "holesail.io";
     license = pkgs.lib.licenses.gpl3Only;
   };
