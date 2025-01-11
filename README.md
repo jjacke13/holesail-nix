@@ -9,7 +9,18 @@ In NixOS or non-NixOS linux (but with Nix installed), run:
 
 If you have flakes enabled:
 
-- nix build github:jjacke13/holesail-nix#holesail
+- nix build github:jjacke13/holesail-nix
+
+If you want only the server or the client part of holesail:
+
+- nix build github:jjacke13/holesail-nix/holesail-server
+- nix build github:jjacke13/holesail-nix/holesail-client
+
+Also available nix-shells with the above packages available:
+
+- nix develop github:jjacke13/holesail-nix
+- nix develop github:jjacke13/holesail-nix/holesail-server
+- nix develop github:jjacke13/holesail-nix/holesail-client
 
 For documentation on how to use Holesail, go to: https://github.com/holesail/holesail .
 
