@@ -16,7 +16,7 @@ If you want only the server or the client part of holesail:
 - nix build github:jjacke13/holesail-nix#holesail-server
 - nix build github:jjacke13/holesail-nix#holesail-client
 
-Also available nix-shells with the above packages available:
+Also available nix-shells with the above packages in PATH:
 
 - nix develop github:jjacke13/holesail-nix
 - nix develop github:jjacke13/holesail-nix#holesail-server
