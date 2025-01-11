@@ -15,7 +15,6 @@
     flake-utils.lib.eachDefaultSystem (system: 
       let 
         pkgs = nixpkgs.legacyPackages.${system};
-        pack = self.packages.${system};
       in
       {
         packages = rec {
