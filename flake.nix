@@ -20,19 +20,11 @@
       {
         packages = rec {
           holesail = import ./holesail.nix { inherit pkgs; };
-          holesail-server = import ./holesail-server.nix { inherit pkgs; };
-          holesail-client = import ./holesail-client.nix { inherit pkgs; };
           default = holesail;
         };
         devShells = {
           holesail = pkgs.mkShell {
-            buildInputs = [ pack.default ];
-          };
-          holesail-server = pkgs.mkShell {
-            buildInputs = [ pack.holesail-server ];
-          };
-          holesail-client = pkgs.mkShell {
-            buildInputs = [ pack.holesail-client ];
+            buildInputs = [ self.packages.${system}.default ];
           };
         };      
       }
