@@ -11,16 +11,9 @@ If you have flakes enabled:
 
 - nix build github:jjacke13/holesail-nix
 
-If you want only the server or the client part of holesail:
-
-- nix build github:jjacke13/holesail-nix#holesail-server
-- nix build github:jjacke13/holesail-nix#holesail-client
-
-Also available nix-shells with the above packages in PATH:
+Also available nix-shell with the above package in PATH:
 
 - nix develop github:jjacke13/holesail-nix
-- nix develop github:jjacke13/holesail-nix#holesail-server
-- nix develop github:jjacke13/holesail-nix#holesail-client
 
 For documentation on how to use Holesail, go to: https://docs.holesail.io/ .
 
