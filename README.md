@@ -22,6 +22,6 @@ Also available nix-shells with the above packages in PATH:
 - nix develop github:jjacke13/holesail-nix#holesail-server
 - nix develop github:jjacke13/holesail-nix#holesail-client
 
-For documentation on how to use Holesail, go to: https://github.com/holesail/holesail .
+For documentation on how to use Holesail, go to: https://docs.holesail.io/ .
 
 Notice: the MIT license here, refers to the code of this repository. License of the actual Holesail package is GPL3.0
