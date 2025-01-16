@@ -2,16 +2,16 @@
 
 pkgs.buildNpmPackage rec {
   pname = "holesail";
-  version = "1.9.1";
+  version = "1.9.2";
 
   src = pkgs.fetchFromGitHub {
     owner = "holesail";
     repo = pname;
     rev = "refs/tags/${version}";
-    hash = "sha256-bmR88SIadZWc/PVyQ6U2vYXa1IB3P23NfFituYQRodg=";
+    hash = "sha256-Zk5fCNRa1HOMvstW5WbbNIrBMpCgRC1Z8mnB80MiIAg=";
   };
 
-  npmDepsHash = "sha256-EkAm0KsBvq31QfTV9ZQXWWNjCscUy7f0pZcdFY1k1yA=";
+  npmDepsHash = "sha256-FAmJO1Jxm7S8JAXd5MJugIBNyO40s+51gelPMN87tkg=";
 
   npmPackFlags = [ "--ignore-scripts" ];
 
