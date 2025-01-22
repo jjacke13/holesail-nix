@@ -13,16 +13,16 @@ in
   options.services.holesail-server = lib.mkOption {
     type = lib.types.attrsOf (lib.types.submodule {
       options = {
-        enable = lib.mkEnableOption "Enable this Holesail client instance.";
+        enable = lib.mkEnableOption "Enable this Holesail server instance.";
         host = lib.mkOption {
           type = lib.types.str;
           default = "127.0.0.1";
-          description = "Host address to use for this Holesail client instance.";
+          description = "Host address to use for this Holesail server instance.";
         };
         port = lib.mkOption {
           type = lib.types.port;
           default = 8989;
-          description = "The port which this Holesail client instance should use.";
+          description = "The port which this Holesail server instance should use.";
         };
         udp = lib.mkOption {
           type = lib.types.bool;
@@ -41,7 +41,7 @@ in
         };
       };
     });
-    description = "Configure multiple Holesail client instances.";
+    description = "Configure multiple Holesail server instances.";
     default = {};
   };
 
