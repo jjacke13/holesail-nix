@@ -16,5 +16,5 @@ jobs:
         with:
           name: "jjacke13/holesail-nix"
           rolling: true
-          visibility: "public"
+          visibility: "Public"
           include-output-paths: true
