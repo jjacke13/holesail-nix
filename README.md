@@ -43,5 +43,3 @@ then you can use the configuration options provided by the modules in your confi
 For documentation on how to use Holesail, go to: https://docs.holesail.io/ .
 
 Notice: the MIT license here, refers to the code of this repository. License of the actual Holesail package is GPL3.0
-
-Holesail-client and server in modules directory are NixOS configuration modules. Currently working but still WORK IN PROGRESS!!!
