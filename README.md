@@ -22,22 +22,19 @@ Modules available:
 - nixosModules.aarch64-linux.holesail-server
 - nixosModules.x86_64-linux.holesail-server
 
-You can include any of the above in your configuration by adding [
+You can include any of the above in your configuration by adding:
 
-holesail.url = "github:jjacke13/holesail-nix";  
-
-};
+	holesail.url = "github:jjacke13/holesail-nix";  
 
 to your flake inputs and then:
 
-nixosConfigurations.<name> = nixpkgs.lib.nixosSystem {
-      specialArgs = { inherit inputs;};
-      modules = [
-	
-        inputs.holesail.nixosModules.aarch64-linux.holesail-server #or any of the above
-        .... #other modules
-        ];      
-};
+	nixosConfigurations.<name> = nixpkgs.lib.nixosSystem {
+      		specialArgs = { inherit inputs;};
+      		modules = [
+			inputs.holesail.nixosModules.aarch64-linux.holesail-server #or any of the above
+        		.... #other modules
+        	];      
+	};
 
 then you can use the configuration options provided by the modules in your configuration
 
