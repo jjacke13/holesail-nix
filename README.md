@@ -31,8 +31,8 @@ to your flake inputs and then:
 	nixosConfigurations.<name> = nixpkgs.lib.nixosSystem {
       		specialArgs = { inherit inputs;};
       		modules = [
-			inputs.holesail.nixosModules.aarch64-linux.holesail-server #or any of the above
-        		.... #other modules
+				inputs.holesail.nixosModules.aarch64-linux.holesail-server #or any of the above
+        			.... #other modules
         		];      
 	};
 
