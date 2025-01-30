@@ -26,9 +26,9 @@ You can include any of the above in your configuration by adding " holesail.url 
 nixosConfigurations.<name> = nixpkgs.lib.nixosSystem {
       specialArgs = { inherit inputs;};
       modules = [
-        holesail.nixosModules.aarch64-linux.holesail-server #or any of the above
+        inputs.holesail.nixosModules.aarch64-linux.holesail-server #or any of the above
         .... #other modules
-      ];      
+        ];      
 };
 
 then you can use the configuration options provided by the modules in your configuration
