@@ -25,7 +25,11 @@
           holesail = pkgs.mkShell {
             buildInputs = [ self.packages.${system}.default ];
           };
-        };      
-      }
+        };
+        nixosModules = {
+          holesail-client = import ./modules/holesail-client.nix;
+          holesail-server = import ./modules/holesail-server.nix; 
+        };
+      }  
     );
 }
