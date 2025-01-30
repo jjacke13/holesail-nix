@@ -33,7 +33,7 @@ to your flake inputs and then:
       		modules = [
 			inputs.holesail.nixosModules.aarch64-linux.holesail-server #or any of the above
         		.... #other modules
-        	];      
+        		];      
 	};
 
 then you can use the configuration options provided by the modules in your configuration
