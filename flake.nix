@@ -28,7 +28,9 @@
         };
         nixosModules = {
           holesail-client = import ./modules/holesail-client.nix;
-          holesail-server = import ./modules/holesail-server.nix; 
+          holesail-server = import ./modules/holesail-server.nix;
+          holesail-filemanager = import ./modules/holesail-filemanager.nix;
+          holesail = import ./modules/holesail.nix;
         };
       }  
     );
