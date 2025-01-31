@@ -26,6 +26,8 @@ Modules available:
 - nixosModules.x86_64-linux.holesail-client
 - nixosModules.aarch64-linux.holesail-server
 - nixosModules.x86_64-linux.holesail-server
+- nixosModules.x86_64-linux.holesail-filemanager
+- nixosModules.aarch64-linux.holesail-filemanager
 
 You can include any of the above in your configuration by adding:
 
@@ -42,7 +44,7 @@ to your flake inputs and then:
 	};
 
 then you can use the configuration options provided by the modules in your configuration
-
+Alternatively, if you want all the configuration options available, just use the module named ' holesail ' which includes all of the above modules.
 
 
 For documentation on how to use Holesail, go to: https://docs.holesail.io/ .
