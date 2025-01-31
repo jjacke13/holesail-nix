@@ -43,7 +43,8 @@ to your flake inputs and then:
         		];      
 	};
 
-then you can use the configuration options provided by the modules in your configuration
+then you can use the configuration options provided by the modules in your configuration.
+
 Alternatively, if you want all the configuration options available, just use the module named ' holesail ' which includes all of the above modules.
 
 
