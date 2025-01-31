@@ -2,7 +2,7 @@
 {
   config,
   lib,
-  pkgs ? import <nixpkgs> {},
+  pkgs,
   ...
 }:
 with lib;
