@@ -20,7 +20,7 @@
         packages = rec {
           holesail = import ./holesail.nix { inherit pkgs; };
           default = holesail;
-        };
+        }; ###
         devShells = {
           holesail = pkgs.mkShell {
             buildInputs = [ self.packages.${system}.default ];
