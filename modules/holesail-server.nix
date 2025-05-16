@@ -1,4 +1,3 @@
-### Holesail server module.  WORK IN PROGRESS ###############
 {
   config,
   lib,

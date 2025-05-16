@@ -1,4 +1,3 @@
-### Holesail client module.  WORK IN PROGRESS ###############
 {
   config,
   lib,
