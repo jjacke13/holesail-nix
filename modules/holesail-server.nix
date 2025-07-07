@@ -1,12 +1,11 @@
-{
-  config,
-  lib,
-  pkgs,
-  ...
+{ config
+, lib
+, pkgs
+, ...
 }:
 with lib;
 let
-  holesail = (import ../holesail.nix {inherit pkgs;});
+  holesail = (import ../holesail.nix { inherit pkgs; });
   cfg = config.services.holesail-server;
 in
 {
@@ -47,20 +46,20 @@ in
       };
     });
     description = "Configure multiple Holesail client instances.";
-    default = {};
+    default = { };
   };
 
   config = mkIf (any (name: cfg.${name}.enable) (attrNames cfg)) {
-    systemd.services = genAttrs (attrNames cfg) (name: 
+    systemd.services = genAttrs (attrNames cfg) (name:
       let
         instanceCfg = cfg.${name};
       in
-        mkIf instanceCfg.enable {
-          description = "Holesail server (${name})";
-          wantedBy = [ "multi-user.target" ];
-          after = [ "network.target" ];
-          path = [ holesail ];
-          script = ''holesail \
+      mkIf instanceCfg.enable {
+        description = "Holesail server (${name})";
+        wantedBy = [ "multi-user.target" ];
+        after = [ "network.target" ];
+        path = [ holesail ];
+        script = ''holesail \
               ${if instanceCfg.connector != "" then "--connector ${instanceCfg.connector}" else ""} \
               ${if instanceCfg.connector-file != "" then "--connector $(cat ${instanceCfg.connector-file})" else ""} \
               --live ${toString instanceCfg.port} \
@@ -68,10 +67,10 @@ in
               ${if instanceCfg.udp then "--udp" else ""} \
               ${if instanceCfg.public then "--public" else ""}
             '';
-          serviceConfig.Type = "simple";
-          serviceConfig.Restart = "always";
-          serviceConfig.RestartSec = "10";
-        }
+        serviceConfig.Type = "simple";
+        serviceConfig.Restart = "always";
+        serviceConfig.RestartSec = "10";
+      }
     );
   };
 

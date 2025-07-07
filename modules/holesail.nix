@@ -2,12 +2,13 @@
 
 {
   imports =
-    [ ./holesail-server.nix
+    [
+      ./holesail-server.nix
       ./holesail-client.nix
       ./holesail-filemanager.nix
     ];
 
-    environment.systemPackages = [
-      (import ../holesail.nix {inherit pkgs;})
-    ];
+  environment.systemPackages = [
+    (import ../holesail.nix { inherit pkgs; })
+  ];
 }

@@ -1,13 +1,12 @@
 ### Holesail filemanager module.  WORK IN PROGRESS ###############
-{
-  config,
-  lib,
-  pkgs,
-  ...
+{ config
+, lib
+, pkgs
+, ...
 }:
 with lib;
 let
-  holesail = (import ../holesail.nix {inherit pkgs;});
+  holesail = (import ../holesail.nix { inherit pkgs; });
   cfg = config.services.holesail-filemanager;
 in
 {
@@ -68,20 +67,20 @@ in
       };
     });
     description = "Configure multiple Holesail filemanager instances.";
-    default = {};
+    default = { };
   };
 
   config = mkIf (any (name: cfg.${name}.enable) (attrNames cfg)) {
-    systemd.services = genAttrs (attrNames cfg) (name: 
+    systemd.services = genAttrs (attrNames cfg) (name:
       let
         instanceCfg = cfg.${name};
       in
-        mkIf instanceCfg.enable {
-          description = "Holesail filemanager (${name})";
-          wantedBy = [ "multi-user.target" ];
-          after = [ "network.target" ];
-          path = [ holesail ];
-          script = ''holesail --filemanager ${instanceCfg.path} \
+      mkIf instanceCfg.enable {
+        description = "Holesail filemanager (${name})";
+        wantedBy = [ "multi-user.target" ];
+        after = [ "network.target" ];
+        path = [ holesail ];
+        script = ''holesail --filemanager ${instanceCfg.path} \
               ${if instanceCfg.connector != "" then "--connector ${instanceCfg.connector}" else ""} \
               ${if instanceCfg.connector-file != "" then "--connector $(cat ${instanceCfg.connector-file})" else ""} \
               --port ${toString instanceCfg.port} \
@@ -92,10 +91,10 @@ in
               --password ${instanceCfg.password} \
               --role ${instanceCfg.role}
             '';
-          serviceConfig.Type = "simple";
-          serviceConfig.Restart = "always";
-          serviceConfig.RestartSec = "10";
-        }
+        serviceConfig.Type = "simple";
+        serviceConfig.Restart = "always";
+        serviceConfig.RestartSec = "10";
+      }
     );
   };
 
