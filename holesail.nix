@@ -1,10 +1,14 @@
-{ pkgs ? import <nixpkgs> { } }:
+{ 
+  buildNpmPackage,
+  fetchFromGitHub,
+  lib,
+}:
 
-pkgs.buildNpmPackage rec {
+buildNpmPackage rec {
   pname = "holesail";
   version = "1.10.0";
 
-  src = pkgs.fetchFromGitHub {
+  src = fetchFromGitHub {
     owner = "holesail";
     repo = pname;
     rev = "refs/tags/${version}";
@@ -19,6 +23,6 @@ pkgs.buildNpmPackage rec {
   meta = {
     description = "Holesail!";
     homepage = "holesail.io";
-    license = pkgs.lib.licenses.gpl3Only;
+    license = lib.licenses.gpl3Only;
   };
 }
