@@ -1,6 +1,6 @@
 # Holesail-Nix
 
-[![NixOS](https://img.shields.io/badge/NixOS-24.11-blue.svg?style=flat-square&logo=nixos)](https://nixos.org)
+[![NixOS](https://img.shields.io/badge/NixOS-25.05-blue.svg?style=flat-square&logo=nixos)](https://nixos.org)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Flakes](https://img.shields.io/badge/Nix-Flakes-informational?style=flat-square&logo=nixos)](https://nixos.wiki/wiki/Flakes)
 
