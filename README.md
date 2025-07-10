@@ -73,10 +73,11 @@ Build the package directly:
 
 ```bash
 # Build the package
-nix-build https://github.com/jjacke13/holesail-nix/archive/main.tar.gz -A holesail
+nix build --extra-experimental-features nix-command --extra-experimental-features flakes \
+    github:jjacke13/holesail-nix
 
 # Or enter a shell with holesail available
-nix-shell -p '(import (fetchTarball "https://github.com/jjacke13/holesail-nix/archive/main.tar.gz") {}).holesail'
+nix shell --extra-experimental-features nix-command --extra-experimental-features flakes github:jjacke13/holesail-nix
 ```
 
 ## NixOS Modules
