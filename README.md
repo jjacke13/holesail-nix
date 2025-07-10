@@ -73,8 +73,7 @@ Build the package directly:
 
 ```bash
 # Build the package
-nix build --extra-experimental-features nix-command --extra-experimental-features flakes \
-    github:jjacke13/holesail-nix
+nix build --extra-experimental-features nix-command --extra-experimental-features flakes github:jjacke13/holesail-nix
 
 # Or enter a shell with holesail available
 nix shell --extra-experimental-features nix-command --extra-experimental-features flakes github:jjacke13/holesail-nix
