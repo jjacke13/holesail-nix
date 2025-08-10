@@ -5,7 +5,7 @@
 }:
 with lib;
 let
-  holesail = (pkgs.callPackage ../holesail.nix { });
+  holesail = pkgs.callPackage ../holesail.nix { };
   cfg = config.services.holesail-client;
 in
 {
