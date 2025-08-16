@@ -4,7 +4,7 @@ pkgs.buildNpmPackage rec {
   pname = "holesail";
   version = "1.10.1";
 
-  src = fetchFromGitHub {
+  src = pkgs.fetchFromGitHub {
     owner = "holesail";
     repo = pname;
     rev = "refs/tags/${version}";
