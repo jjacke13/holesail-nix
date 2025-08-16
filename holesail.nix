@@ -2,20 +2,25 @@
 
 pkgs.buildNpmPackage rec {
   pname = "holesail";
-  version = "1.10.0";
+  version = "2.3.0";
 
   src = pkgs.fetchFromGitHub {
     owner = "holesail";
     repo = pname;
-    rev = "refs/tags/${version}";
-    hash = "sha256-eANDS4Avu6or+1XXRmM+rceZzjKchhoc5nbv1grpvwE=";
+    rev = "39676c819046f999bff4044680d7f2d1b6b37b75";
+    hash = "sha256-FcIjzo2dob/v3B8/S4pfci9l9CrL38pWgFv7m5r6rbk=";
   };
 
-  npmDepsHash = "sha256-TKxm8WdsJ6fbs8WBAN7yxNQoJ43fTQghD0KYGxRRd50=";
+  postPatch = ''
+    cp ${./package-lock.json} package-lock.json
+  '';
+
+  npmDepsHash = "sha256-AypnAB9aYrJfhrZdbEaZI0iW5Sh7fEe2V8hURqIGtj4=";
 
   npmPackFlags = [ "--ignore-scripts" ];
+  
+  dontNpmBuild = true;
 
-  buildPhase = "echo 'No build phase required'";
   meta = {
     description = "Holesail!";
     homepage = "holesail.io";
