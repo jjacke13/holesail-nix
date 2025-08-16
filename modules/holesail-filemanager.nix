@@ -6,7 +6,7 @@
 }:
 with lib;
 let
-  holesail = pkgs.callPackage ../holesail.nix { };
+  holesail = (import ../holesail.nix {inherit pkgs;});
   cfg = config.services.holesail-filemanager;
 in
 {

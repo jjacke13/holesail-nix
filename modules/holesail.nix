@@ -9,6 +9,6 @@
     ];
 
   environment.systemPackages = [
-    (pkgs.callPackage ../holesail.nix { })
+    (import ../holesail.nix {inherit pkgs;})
   ];
 }

@@ -18,7 +18,7 @@
       in
       {
         packages = rec {
-          holesail = pkgs.callPackage ./holesail.nix { };
+          holesail = import ./holesail.nix { inherit pkgs; };
           default = holesail;
         };
         devShells = {
