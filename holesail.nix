@@ -8,10 +8,10 @@ pkgs.buildNpmPackage rec {
     owner = "holesail";
     repo = pname;
     rev = "refs/tags/${version}";
-    hash = "sha256-eANDS4Avu6or+1XXRmM+rceZzjKchhoc5nbv1grpvwE=";
+    hash = "sha256-7YTBwjU0xzoDqlRqfdQZrJRvSXTtT8rpA1zRdLSdFoU=";
   };
 
-  npmDepsHash = "sha256-TKxm8WdsJ6fbs8WBAN7yxNQoJ43fTQghD0KYGxRRd50=";
+  npmDepsHash = "sha256-aos1WOsVsgZG6h0g242/mz5yiN/7V+G8to8IyaKldFI=";
 
   npmPackFlags = [ "--ignore-scripts" ];
 
