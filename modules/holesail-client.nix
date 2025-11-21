@@ -29,15 +29,15 @@ in
           default = false;
           description = "Enable UDP instead of TCP.";
         };
-        connection-string = mkOption {
+        connect = mkOption {
           type = types.str;
           default = "";
-          description = "The connection string to the Holesail server. If empty, there will be an error.";
+          description = "The connection key of the Holesail server. If empty, there will be an error.";
         };
-        connection-string-file = mkOption {
+        connect-file = mkOption {
           type = types.str;
           default = "";
-          description = "The path to a file containing the connection string to the Holesail server. If null, the connection-string option will be used.";
+          description = "The path to a file containing the key of the Holesail server. If null, the connect option will be used.";
         };
       };
     });
@@ -56,8 +56,8 @@ in
           after = [ "network.target" ];
           path = [ holesail ];
           script = ''holesail \
-              ${instanceCfg.connection-string} \
-              $(cat ${instanceCfg.connection-string-file}) \
+              ${instanceCfg.connect} \
+              $(cat ${instanceCfg.connect-file}) \
               --port ${toString instanceCfg.port} \
               --host ${instanceCfg.host} \
               ${if instanceCfg.udp then "--udp" else ""}
