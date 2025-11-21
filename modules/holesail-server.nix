@@ -42,7 +42,8 @@ in
         public = mkOption {
           type = types.bool;
           default = false;
-          description = "Whether to announce the server to the DHT. If you use public mode, the key should start with 'hs://0000' ";
+          description = "Whether to announce the server to the DHT. If you want to use public mode with a fixed connection key, you should
+                        use as key just a random string";
         };
       };
     });
