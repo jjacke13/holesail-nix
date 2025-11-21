@@ -43,7 +43,8 @@ in
         public = mkOption {
           type = types.bool;
           default = false;
-          description = "Whether to announce the filemanager to the DHT.";
+          description = "Whether to announce the server to the DHT. If you want to use public mode with a fixed connection key, you should
+                        use as key just a random string";
         };
         username = mkOption {
           type = types.str;
