@@ -14,6 +14,17 @@ in
     type = types.attrsOf (types.submodule {
       options = {
         enable = mkEnableOption "Enable this Holesail server instance.";
+        
+        user = mkOption {
+          description = "User account under which holesail runs.";
+          default = "holesail";
+          type = types.str;
+        };
+        group = mkOption {
+          description = "Group under which holesail runs.";
+          default = "holesail";
+          type = types.str;
+        };
         host = mkOption {
           type = types.str;
           default = "127.0.0.1";
@@ -45,6 +56,16 @@ in
           description = "Whether to announce the server to the DHT. If you want to use public mode with a fixed connection key, you should
                         use as key just a random string";
         };
+        log = mkOption {
+          type = types.bool;
+          default = false;
+          description = "Whether to enable logs of holesail. They will be stored in the datadir.";
+        };
+        datadir = mkOption {
+          type = types.str;
+          default = "/var/lib/holesail";
+          description = "The path of the directory that will be served by the filemanager.";
+        };
       };
     });
     description = "Configure multiple Holesail client instances.";
@@ -67,13 +88,39 @@ in
               --live ${toString instanceCfg.port} \
               --host ${instanceCfg.host} \
               ${if instanceCfg.udp then "--udp" else ""} \
-              ${if instanceCfg.public then "--public" else ""}
+              ${if instanceCfg.public then "--public" else ""} \
+              ${if instanceCfg.log then "--log" else ""} \
+              ${instanceCfg.datadir}
             '';
-          serviceConfig.Type = "simple";
-          serviceConfig.Restart = "always";
-          serviceConfig.RestartSec = "10";
+          serviceConfig = {
+            Type = "simple";
+            Restart = "always";
+            RestartSec = "10";
+            User = instanceCfg.user;
+            Group = instanceCfg.group;
+          } // lib.optionalAttrs instanceCfg.log {
+            StandardOutput = "file:${instanceCfg.datadir}/holesail-${name}.log";
+            StandardError = "file:${instanceCfg.datadir}/holesail-${name}.log";
+            ExecStartPost = "${pkgs.bash}/bin/bash -c 'sleep 5; grep -oE \"hs://[a-zA-Z0-9]+\" ${instanceCfg.datadir}/holesail-${name}.log | head -1 | tr -d \"\\n\" > ${instanceCfg.datadir}/holesail-${name}.key || true'";
+          };
         }
     );
+
+    users.users = lib.mkIf (any (name: cfg.${name}.user == "holesail") (attrNames cfg)) {
+      holesail = {
+        isSystemUser = true;
+        group = "holesail";
+        home = "/var/lib/holesail";
+      };
+    };
+
+    users.groups = lib.mkIf (any (name: cfg.${name}.group == "holesail") (attrNames cfg)) {
+      holesail = { };
+    };
+
+    systemd.tmpfiles.rules = [
+      "d /var/lib/holesail/ 0755 holesail holesail - -"
+    ];
   };
 
   meta.maintainers = with maintainers; [ jjacke13 ];
