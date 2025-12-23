@@ -15,6 +15,17 @@ in
     type = types.attrsOf (types.submodule {
       options = {
         enable = mkEnableOption "Enable this Holesail filemanager instance.";
+
+        user = mkOption {
+          description = "User account under which holesail filemanager runs.";
+          default = "holesail";
+          type = types.str;
+        };
+        group = mkOption {
+          description = "Group under which holesail filemanager runs.";
+          default = "holesail";
+          type = types.str;
+        };
         host = mkOption {
           type = types.str;
           default = "127.0.0.1";
@@ -61,10 +72,19 @@ in
           default = "user";
           description = "The role to assign to the user. It can be 'admin' or 'user'.";
         };
-        path = mkOption {
+        directory = mkOption {
           type = types.str;
-          default = "";
-          description = "The path of the directory that will be served by the filemanager.";
+          description = "The path of the directory that will be served by the filemanager. This option is required.";
+        };
+        log = mkOption {
+          type = types.bool;
+          default = false;
+          description = "Whether to enable logs of holesail.";
+        };
+        key-output-file = mkOption {
+          type = types.nullOr types.str;
+          default = null;
+          description = "Path to save the generated hs:// connection key. Useful in public mode to capture the connection string.";
         };
       };
     });
@@ -82,22 +102,46 @@ in
           wantedBy = [ "multi-user.target" ];
           after = [ "network.target" ];
           path = [ holesail ];
-          script = ''holesail --filemanager ${instanceCfg.path} \
-              ${if instanceCfg.key != "" then "--key ${instanceCfg.key}" else ""} \
-              ${if instanceCfg.key-file != "" then "--key $(cat ${instanceCfg.key-file})" else ""} \
-              --port ${toString instanceCfg.port} \
-              --host ${instanceCfg.host} \
-              ${if instanceCfg.udp then "--udp" else ""} \
-              ${if instanceCfg.public then "--public" else ""} \
-              --username ${instanceCfg.username} \
-              --password ${instanceCfg.password} \
-              --role ${instanceCfg.role}
-            '';
-          serviceConfig.Type = "simple";
-          serviceConfig.Restart = "always";
-          serviceConfig.RestartSec = "10";
+          script = let
+            args = lib.concatStringsSep " " (lib.filter (x: x != "") [
+              "--filemanager ${instanceCfg.directory}"
+              (if instanceCfg.key != "" then "--key ${instanceCfg.key}" else "")
+              (if instanceCfg.key-file != "" then "--key $(cat ${instanceCfg.key-file})" else "")
+              "--port ${toString instanceCfg.port}"
+              "--host ${instanceCfg.host}"
+              (if instanceCfg.udp then "--udp" else "")
+              (if instanceCfg.public then "--public" else "")
+              "--username ${instanceCfg.username}"
+              "--password ${instanceCfg.password}"
+              "--role ${instanceCfg.role}"
+              (if instanceCfg.log then "--log" else "")
+            ]);
+          in ''
+            holesail ${args}
+          '';
+          serviceConfig = {
+            Type = "simple";
+            Restart = "always";
+            RestartSec = "10";
+            User = instanceCfg.user;
+            Group = instanceCfg.group;
+          } // lib.optionalAttrs (instanceCfg.key-output-file != null) {
+            ExecStartPost = "${pkgs.bash}/bin/bash -c 'sleep 4; ${pkgs.systemd}/bin/journalctl -u ${name}.service --since \"5 seconds ago\" --no-pager | grep -oE \"hs://[a-zA-Z0-9]+\" | head -1 > ${instanceCfg.key-output-file}'";
+          };
         }
     );
+
+    users.users = lib.mkIf (any (name: cfg.${name}.user == "holesail") (attrNames cfg)) {
+      holesail = {
+        isSystemUser = true;
+        group = "holesail";
+        home = "/var/lib/holesail";
+      };
+    };
+
+    users.groups = lib.mkIf (any (name: cfg.${name}.group == "holesail") (attrNames cfg)) {
+      holesail = { };
+    };
   };
 
   meta.maintainers = with maintainers; [ jjacke13 ];
