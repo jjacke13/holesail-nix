@@ -77,14 +77,17 @@ in
           wantedBy = [ "multi-user.target" ];
           after = [ "network.target" ];
           path = [ holesail ];
-          script = ''
-            holesail \
-              ${if instanceCfg.key != "" then "${instanceCfg.key} \\" else ""}
-              ${if instanceCfg.key-file != "" then "$(cat ${instanceCfg.key-file}) \\" else ""}
-              ${if instanceCfg.port != null then "--port ${toString instanceCfg.port} \\" else ""}
-              --host ${instanceCfg.host} \
-              ${if instanceCfg.udp then "--udp \\" else ""}
-              ${if instanceCfg.log then "--log" else ""}
+          script = let
+            args = lib.concatStringsSep " " (lib.filter (x: x != "") [
+              (if instanceCfg.key != "" then instanceCfg.key else "")
+              (if instanceCfg.key-file != "" then "$(cat ${instanceCfg.key-file})" else "")
+              (if instanceCfg.port != null then "--port ${toString instanceCfg.port}" else "")
+              "--host ${instanceCfg.host}"
+              (if instanceCfg.udp then "--udp" else "")
+              (if instanceCfg.log then "--log" else "")
+            ]);
+          in ''
+            holesail ${args}
           '';
           serviceConfig = {
             Type = "simple";
