@@ -118,9 +118,11 @@ in
       holesail = { };
     };
 
-    systemd.tmpfiles.rules = [
-      "d /var/lib/holesail/ 0755 holesail holesail - -"
-    ];
+    systemd.tmpfiles.rules = 
+      map (name: 
+        let instanceCfg = cfg.${name}; in
+        "d ${instanceCfg.datadir} 0755 ${instanceCfg.user} ${instanceCfg.group} - -"
+      ) (filter (name: cfg.${name}.enable) (attrNames cfg));
   };
 
   meta.maintainers = with maintainers; [ jjacke13 ];
