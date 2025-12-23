@@ -51,11 +51,6 @@ in
           default = "";
           description = "The path to a file containing the key of the Holesail server. If null, the key option will be used.";
         };
-        datadir = mkOption {
-          type = types.str;
-          default = "/var/lib/holesail";
-          description = "Where Holesail should save the keys";
-        };
         log = mkOption {
           type = types.bool;
           default = false;
@@ -95,12 +90,6 @@ in
             RestartSec = "10";
             User = instanceCfg.user;
             Group = instanceCfg.group;
-            ExecStartPost = "${pkgs.bash}/bin/bash -c '${
-              if instanceCfg.key != "" then
-                "echo -n \"${instanceCfg.key}\" > ${instanceCfg.datadir}/holesail-${name}-connection.key"
-              else
-                "cat ${instanceCfg.key-file} | tr -d \"\\n\" > ${instanceCfg.datadir}/holesail-${name}-connection.key"
-            }'";
           };
         }
     );
@@ -116,13 +105,6 @@ in
     users.groups = lib.mkIf (any (name: cfg.${name}.group == "holesail") (attrNames cfg)) {
       holesail = { };
     };
-
-    systemd.tmpfiles.rules =
-      lib.unique (map (name:
-        let instanceCfg = cfg.${name}; in
-        "d ${instanceCfg.datadir} 0755 ${instanceCfg.user} ${instanceCfg.group} - -"
-      ) (filter (name: cfg.${name}.enable && cfg.${name}.datadir == "/var/lib/holesail") (attrNames cfg)));
-
   };
 
   meta.maintainers = with maintainers; [ jjacke13 ];
