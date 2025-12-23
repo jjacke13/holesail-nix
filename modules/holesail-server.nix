@@ -32,8 +32,7 @@ in
         };
         port = mkOption {
           type = types.port;
-          default = 8989;
-          description = "The port which this Holesail server instance should use.";
+          description = "The local port to expose over Holesail. This option is required.";
         };
         udp = mkOption {
           type = types.bool;
@@ -54,17 +53,12 @@ in
           type = types.bool;
           default = false;
           description = "Whether to announce the server to the DHT. If you want to use public mode with a fixed connection key, you should
-                        use as key just a random string";
+                        use as key just a random string of exactly 32 characters";
         };
         log = mkOption {
           type = types.bool;
           default = false;
-          description = "Whether to enable logs of holesail. They will be stored in the datadir.";
-        };
-        datadir = mkOption {
-          type = types.str;
-          default = "/var/lib/holesail";
-          description = "The path of the directory that will be served by the filemanager.";
+          description = "Whether to enable logs of holesail.";
         };
       };
     });
@@ -82,26 +76,25 @@ in
           wantedBy = [ "multi-user.target" ];
           after = [ "network.target" ];
           path = [ holesail ];
-          script = ''holesail \
-              ${if instanceCfg.key != "" then "--key ${instanceCfg.key}" else ""} \
-              ${if instanceCfg.key-file != "" then "--key $(cat ${instanceCfg.key-file})" else ""} \
-              --live ${toString instanceCfg.port} \
-              --host ${instanceCfg.host} \
-              ${if instanceCfg.udp then "--udp" else ""} \
-              ${if instanceCfg.public then "--public" else ""} \
-              ${if instanceCfg.log then "--log" else ""} \
-              ${instanceCfg.datadir}
-            '';
+          script = let
+            args = lib.concatStringsSep " " (lib.filter (x: x != "") [
+              (if instanceCfg.key != "" then "--key ${instanceCfg.key}" else "")
+              (if instanceCfg.key-file != "" then "--key $(cat ${instanceCfg.key-file})" else "")
+              "--live ${toString instanceCfg.port}"
+              "--host ${instanceCfg.host}"
+              (if instanceCfg.udp then "--udp" else "")
+              (if instanceCfg.public then "--public" else "")
+              (if instanceCfg.log then "--log" else "")
+            ]);
+          in ''
+            holesail ${args}
+          '';
           serviceConfig = {
             Type = "simple";
             Restart = "always";
             RestartSec = "10";
             User = instanceCfg.user;
             Group = instanceCfg.group;
-          } // lib.optionalAttrs instanceCfg.log {
-            StandardOutput = "file:${instanceCfg.datadir}/holesail-${name}.log";
-            StandardError = "file:${instanceCfg.datadir}/holesail-${name}.log";
-            ExecStartPost = "${pkgs.bash}/bin/bash -c 'sleep 5; grep -oE \"hs://[a-zA-Z0-9]+\" ${instanceCfg.datadir}/holesail-${name}.log | head -1 | tr -d \"\\n\" > ${instanceCfg.datadir}/holesail-${name}.key || true'";
           };
         }
     );
@@ -117,12 +110,6 @@ in
     users.groups = lib.mkIf (any (name: cfg.${name}.group == "holesail") (attrNames cfg)) {
       holesail = { };
     };
-
-    systemd.tmpfiles.rules = 
-      map (name: 
-        let instanceCfg = cfg.${name}; in
-        "d ${instanceCfg.datadir} 0755 ${instanceCfg.user} ${instanceCfg.group} - -"
-      ) (filter (name: cfg.${name}.enable) (attrNames cfg));
   };
 
   meta.maintainers = with maintainers; [ jjacke13 ];
