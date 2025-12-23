@@ -60,6 +60,11 @@ in
           default = false;
           description = "Whether to enable logs of holesail.";
         };
+        key-output-file = mkOption {
+          type = types.nullOr types.str;
+          default = null;
+          description = "Path to save the generated hs:// connection key. Useful in public mode to capture the connection string.";
+        };
       };
     });
     description = "Configure multiple Holesail client instances.";
@@ -95,6 +100,8 @@ in
             RestartSec = "10";
             User = instanceCfg.user;
             Group = instanceCfg.group;
+          } // lib.optionalAttrs (instanceCfg.key-output-file != null) {
+            ExecStartPost = "${pkgs.bash}/bin/bash -c 'sleep 4; ${pkgs.systemd}/bin/journalctl -u ${name}.service --since \"5 seconds ago\" --no-pager | grep -oE \"hs://[a-zA-Z0-9]+\" | head -1 > ${instanceCfg.key-output-file}'";
           };
         }
     );
