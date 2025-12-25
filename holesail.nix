@@ -2,29 +2,29 @@
 
 pkgs.buildNpmPackage rec {
   pname = "holesail";
-  version = "1.10.1";
+  version = "2.4.1";
 
   src = pkgs.fetchFromGitHub {
     owner = "holesail";
     repo = pname;
     rev = "refs/tags/${version}";
-    hash = "sha256-7YTBwjU0xzoDqlRqfdQZrJRvSXTtT8rpA1zRdLSdFoU=";
+    hash = "sha256-xIs49HoPV8j0yDPn29WhgS/mkIAEJLRiNNEmKChq0X4=";
   };
 
-  npmDepsHash = "sha256-aos1WOsVsgZG6h0g242/mz5yiN/7V+G8to8IyaKldFI=";
+  postPatch = ''
+    cp ${./package-lock.json} package-lock.json
+  '';
+  
+  nodejs = pkgs.nodejs_24;
+  npmDepsHash = "sha256-WRgC0IH/1Tuw69HQ7Nyf07lAI6SjOpYkIkux9vj8gLw=";
 
   npmPackFlags = [ "--ignore-scripts" ];
-
-  buildPhase = "echo 'No build phase required'";
   
-  meta = with pkgs.lib; {
-    description = "Holesail is a truly peer-to-peer network tunneling and reverse proxy software that supports both TCP and UDP protocols. 
-        Holesail lets you share any locally running application on a specific port with third parties securely and with a single command.
-        No static IP or port forwarding required.";
-    homepage = "https://holesail.io";
-    license = licenses.gpl3Only;
-    maintainers = with maintainers; [
-      jjacke13
-    ];
+  dontNpmBuild = true;
+
+  meta = {
+    description = "Holesail!";
+    homepage = "holesail.io";
+    license = pkgs.lib.licenses.gpl3Only;
   };
 }

@@ -1,8 +1,8 @@
 {
   description = "Holesail";
-
+  
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-25.05";
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-25.11";
     systems.url = "github:nix-systems/default-linux";
     flake-utils = {
       url = "github:numtide/flake-utils";
@@ -12,8 +12,8 @@
 
   outputs = { self, nixpkgs, flake-utils, ... }@inputs:
 
-    flake-utils.lib.eachDefaultSystem (system:
-      let
+    flake-utils.lib.eachDefaultSystem (system: 
+      let 
         pkgs = nixpkgs.legacyPackages.${system};
       in
       {
@@ -32,6 +32,6 @@
           holesail-filemanager = import ./modules/holesail-filemanager.nix;
           holesail = import ./modules/holesail.nix;
         };
-      }
+      }  
     );
 }
