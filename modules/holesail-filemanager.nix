@@ -84,7 +84,7 @@ in
         key-output-file = mkOption {
           type = types.nullOr types.str;
           default = null;
-          description = "Path to save the generated hs:// connection key. Useful in public mode to capture the connection string.";
+          description = "Path to save the generated hs:// connection key. Useful for automation and capturing connection strings.";
         };
       };
     });
