@@ -8,6 +8,11 @@
       url = "github:numtide/flake-utils";
       inputs.systems.follows = "systems";
     };
+    # C++ port, re-exported as packages.holesail-cpp. Deliberately NOT
+    # `inputs.nixpkgs.follows = "nixpkgs"`: it pins its own nixpkgs for a
+    # libuv version its DHT depends on, so let it keep the tree it was
+    # tested against. Bump with: nix flake update holesail-cpp
+    holesail-cpp.url = "github:jjacke13/holesail-cpp";
   };
 
   outputs = { self, nixpkgs, flake-utils, ... }@inputs:
@@ -20,6 +25,7 @@
         packages = rec {
           holesail = import ./holesail.nix { inherit pkgs; };
           default = holesail;
+          holesail-cpp = inputs.holesail-cpp.packages.${system}.default;
         };
         devShells = {
           holesail = pkgs.mkShell {

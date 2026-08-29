@@ -18,6 +18,11 @@ To build holesail for your system:
 
 	nix build github:jjacke13/holesail-nix
 
+The C++ port ([holesail-cpp](https://github.com/jjacke13/holesail-cpp)) is re-exported as a
+separate output:
+
+	nix build github:jjacke13/holesail-nix#holesail-cpp
+
 Also available nix-shell with the above package in PATH:
 
 	nix develop github:jjacke13/holesail-nix
