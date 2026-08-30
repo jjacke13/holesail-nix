@@ -25,6 +25,13 @@ in
           default = "holesail";
           type = types.str;
         };
+        package = mkOption {
+          type = types.package;
+          default = holesail;
+          defaultText = literalExpression "the JS holesail package built by this flake";
+          description = "The holesail package to run. Set to the holesail-cpp output of this
+            flake to run the C++ port instead; its CLI takes the same flags.";
+        };
         host = mkOption {
           type = types.str;
           default = "127.0.0.1";
@@ -71,7 +78,7 @@ in
           description = "Holesail client (${name})";
           wantedBy = [ "multi-user.target" ];
           after = [ "network.target" ];
-          path = [ holesail ];
+          path = [ instanceCfg.package ];
           script = let
             args = lib.concatStringsSep " " (lib.filter (x: x != "") [
               (if instanceCfg.key != "" then instanceCfg.key else "")

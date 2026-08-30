@@ -56,6 +56,20 @@ then you can use the configuration options provided by the modules in your confi
 
 Alternatively, if you want all the configuration options available, just use the module named `holesail` which includes all of the above modules.
 
+### Running the C++ port instead
+
+`holesail-client` and `holesail-server` take a `package` option, defaulting to the
+Node build. Point it at the `holesail-cpp` output to run the C++ port instead — its
+CLI takes the same flags, so every other option keeps working:
+
+	services.holesail-server.myserver = {
+		enable = true;
+		port = 8080;
+		package = inputs.holesail.packages.aarch64-linux.holesail-cpp;
+	};
+
+`holesail-filemanager` has no `package` option: the C++ port rejects `--filemanager`.
+
 ## Module Features
 
 All modules support:
@@ -63,6 +77,7 @@ All modules support:
 - **Logging** - Optional `--log` flag for detailed output
 - **Key Management** - Specify keys directly or via file paths
 - **Automated Key Capture** - `key-output-file` option to automatically save generated connection strings
+- **Package Selection** - `package` option on the client and server modules, to run the Node build or the C++ port
 
 ## Usage Examples
 
