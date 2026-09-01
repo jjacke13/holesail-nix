@@ -58,17 +58,34 @@ Alternatively, if you want all the configuration options available, just use the
 
 ### Running the C++ port instead
 
-`holesail-client` and `holesail-server` take a `package` option, defaulting to the
-Node build. Point it at the `holesail-cpp` output to run the C++ port instead — its
-CLI takes the same flags, so every other option keeps working:
+`holesail-client` and `holesail-server` take an `implementation` option — `"js"`
+(default) or `"cpp"`:
 
 	services.holesail-server.myserver = {
 		enable = true;
 		port = 8080;
-		package = inputs.holesail.packages.aarch64-linux.holesail-cpp;
+		implementation = "cpp";
 	};
 
-`holesail-filemanager` has no `package` option: the C++ port rejects `--filemanager`.
+`"js"` is the upstream Node build and what the Holesail project supports.
+`"cpp"` is [holesail-cpp](https://github.com/jjacke13/holesail-cpp), an
+independent C++ port speaking the same protocol — same connection strings, same
+key derivation, same DHT records — in roughly 3 MB of RSS instead of ~78 MB,
+with no Node runtime on the target. Every other option keeps working either way,
+since both CLIs take the same flags.
+
+The `package` option is still there as an escape hatch and overrides
+`implementation`, for pinning a specific build:
+
+	services.holesail-server.myserver.package = inputs.holesail.packages.aarch64-linux.holesail-cpp;
+
+`implementation = "cpp"` only works when the module comes from this flake
+(`inputs.holesail.nixosModules.<system>.holesail-server`), because a NixOS
+module cannot reach a flake input by itself. Importing the module file by path
+still works, but gives you the JS package; set `package` explicitly there.
+
+`holesail-filemanager` has no `implementation` option: the C++ port does not
+implement `--filemanager`, so that service is JS-only by construction.
 
 ## Module Features
 
@@ -77,7 +94,7 @@ All modules support:
 - **Logging** - Optional `--log` flag for detailed output
 - **Key Management** - Specify keys directly or via file paths
 - **Automated Key Capture** - `key-output-file` option to automatically save generated connection strings
-- **Package Selection** - `package` option on the client and server modules, to run the Node build or the C++ port
+- **Implementation Selection** - `implementation = "js" | "cpp"` on the client and server modules, to run the Node build or the C++ port (with `package` as an escape hatch)
 
 ## Usage Examples
 

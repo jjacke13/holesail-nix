@@ -32,11 +32,15 @@
             buildInputs = [ self.packages.${system}.default ];
           };
         };
-        nixosModules = {
-          holesail-client = import ./modules/holesail-client.nix;
-          holesail-server = import ./modules/holesail-server.nix;
+        nixosModules = let
+          # The C++ port is a flake input, and a NixOS module cannot reach one.
+          # Hand it to the modules that offer `implementation = "cpp"`.
+          holesailCpp = inputs.holesail-cpp.packages.${system}.default;
+        in {
+          holesail-client = import ./modules/holesail-client.nix { inherit holesailCpp; };
+          holesail-server = import ./modules/holesail-server.nix { inherit holesailCpp; };
           holesail-filemanager = import ./modules/holesail-filemanager.nix;
-          holesail = import ./modules/holesail.nix;
+          holesail = import ./modules/holesail.nix { inherit holesailCpp; };
         };
       }  
     );

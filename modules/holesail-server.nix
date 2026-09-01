@@ -1,3 +1,8 @@
+# `holesailCpp` is threaded in by flake.nix: a NixOS module cannot reach a
+# flake input on its own, and the C++ port is one. It stays optional so this
+# file still works when imported by path — only `implementation = "cpp"` needs
+# it, and that path explains itself rather than failing obscurely.
+{ holesailCpp ? null }:
 {
   config,
   lib,
@@ -7,11 +12,25 @@
 with lib;
 let
   holesail = (import ../holesail.nix {inherit pkgs;});
+  cppPackage =
+    if holesailCpp != null then holesailCpp
+    else throw ''
+      services.holesail-server: implementation = "cpp" needs the holesail-cpp
+      package, which this module only receives when it is taken from the
+      holesail-nix flake, e.g.
+
+        imports = [ inputs.holesail.nixosModules.<system>.holesail-server ];
+
+      Importing modules/holesail-server.nix by path gives you the JS package
+      only. Set `package` explicitly if you need the C++ port that way.
+    '';
   cfg = config.services.holesail-server;
 in
 {
   options.services.holesail-server = mkOption {
-    type = types.attrsOf (types.submodule {
+    # A function, so `package` can default off `implementation` in the same
+    # submodule.
+    type = types.attrsOf (types.submodule ({ config, ... }: {
       options = {
         enable = mkEnableOption "Enable this Holesail server instance.";
         
@@ -25,12 +44,34 @@ in
           default = "holesail";
           type = types.str;
         };
+        implementation = mkOption {
+          type = types.enum [ "js" "cpp" ];
+          default = "js";
+          example = "cpp";
+          description = ''
+            Which holesail to run.
+
+            `js` is the upstream Node implementation (the default, and what the
+            Holesail project supports). `cpp` is holesail-cpp, an independent
+            C++ port that speaks the same protocol — same connection strings,
+            same key derivation, same DHT records — in roughly 3 MB of RSS
+            instead of ~78 MB, with no Node runtime on the target. Worth it on
+            constrained hardware; otherwise prefer `js`.
+
+            This only picks the default for `package`; setting `package`
+            directly still wins.
+          '';
+        };
         package = mkOption {
           type = types.package;
-          default = holesail;
-          defaultText = literalExpression "the JS holesail package built by this flake";
-          description = "The holesail package to run. Set to the holesail-cpp output of this
-            flake to run the C++ port instead; its CLI takes the same flags.";
+          default = if config.implementation == "cpp" then cppPackage else holesail;
+          defaultText = literalExpression
+            "the package matching `implementation` (JS holesail, or holesail-cpp)";
+          description = ''
+            The holesail package to run. Normally left alone — set
+            `implementation` instead. Override this to pin a specific build;
+            both CLIs take the same flags.
+          '';
         };
         host = mkOption {
           type = types.str;
@@ -73,8 +114,8 @@ in
           description = "Path to save the generated hs:// connection key. Useful for automation and capturing connection strings.";
         };
       };
-    });
-    description = "Configure multiple Holesail client instances.";
+    }));
+    description = "Configure multiple Holesail server instances.";
     default = {};
   };
 
